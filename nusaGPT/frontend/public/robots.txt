@@ -1,0 +1,15 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow crawling of authentication pages
+Disallow: /auth/*
+
+# Disallow crawling of API endpoints
+Disallow: /api/*
+
+# Sitemap location
+Sitemap: https://nusagpt.com/sitemap.xml
+
+# Crawl-delay for all bots
+Crawl-delay: 10
