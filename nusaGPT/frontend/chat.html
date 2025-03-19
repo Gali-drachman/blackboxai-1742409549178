@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NusaGPT Chat - Your Private AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chat-container {
+            height: calc(100vh - 160px);
+        }
+        .message {
+            max-width: 80%;
+            margin: 8px 0;
+            padding: 12px 16px;
+            border-radius: 12px;
+        }
+        .user-message {
+            background-color: #e0e7ff;
+            margin-left: auto;
+        }
+        .ai-message {
+            background-color: #f3f4f6;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="/" class="text-2xl font-bold text-indigo-600">NusaGPT</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-500">© 2023 All Rights Reserved</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Chat Interface -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Chat Messages Container -->
+            <div class="chat-container p-6 overflow-y-auto">
+                <!-- AI Welcome Message -->
+                <div class="message ai-message">
+                    <p class="text-gray-800">Hello! I'm your private AI assistant. How can I help you today?</p>
+                </div>
+
+                <!-- Sample User Message -->
+                <div class="message user-message">
+                    <p class="text-gray-800">Hi! Can you help me with something?</p>
+                </div>
+
+                <!-- Sample AI Response -->
+                <div class="message ai-message">
+                    <p class="text-gray-800">Of course! I'm here to assist you. What would you like to know?</p>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="border-t border-gray-200 p-4 bg-white">
+                <div class="flex space-x-4">
+                    <input type="text" 
+                           placeholder="Type your message here..." 
+                           class="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                    <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                        <i class="fas fa-paper-plane mr-2"></i>Send
+                    </button>
+                </div>
+                <p class="mt-2 text-xs text-gray-500">
+                    Your conversations are private and protected. Messages are processed securely.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-8">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <p class="text-sm text-gray-500">
+                    Protected by proprietary license
+                </p>
+                <p class="text-sm text-gray-500">
+                    Secure & Private
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Chat functionality
+        const input = document.querySelector('input');
+        const sendButton = document.querySelector('button');
+        const chatContainer = document.querySelector('.chat-container');
+
+        function addMessage(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+            messageDiv.innerHTML = `<p class="text-gray-800">${text}</p>`;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function handleSend() {
+            const text = input.value.trim();
+            if (text) {
+                addMessage(text, true);
+                input.value = '';
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    addMessage("I apologize, but I can only provide responses through the secure API endpoint. Please ensure you're properly authenticated to use the chat functionality.");
+                }, 1000);
+            }
+        }
+
+        sendButton.addEventListener('click', handleSend);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSend();
+            }
+        });
+    </script>
+</body>
+</html>
