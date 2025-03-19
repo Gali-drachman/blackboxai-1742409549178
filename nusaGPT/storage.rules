@@ -1,0 +1,69 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+    
+    function isValidFileType() {
+      return request.resource.contentType.matches('image/.*')
+          || request.resource.contentType.matches('application/pdf')
+          || request.resource.contentType.matches('text/plain')
+          || request.resource.contentType.matches('application/json');
+    }
+    
+    function isValidFileSize() {
+      return request.resource.size <= 5 * 1024 * 1024; // 5MB max
+    }
+
+    // Chat attachments (files uploaded during chat)
+    match /chat-attachments/{userId}/{sessionId}/{fileName} {
+      allow read: if isAuthenticated() && isOwner(userId);
+      allow create: if isAuthenticated() 
+                   && isOwner(userId)
+                   && isValidFileType()
+                   && isValidFileSize();
+      allow delete: if isAuthenticated() && isOwner(userId);
+    }
+
+    // User profile pictures
+    match /profile-pictures/{userId} {
+      allow read: if true; // Public read access
+      allow write: if isAuthenticated() 
+                  && isOwner(userId)
+                  && request.resource.contentType.matches('image/.*')
+                  && request.resource.size <= 2 * 1024 * 1024; // 2MB max
+    }
+
+    // Temporary uploads (for processing)
+    match /temp/{userId}/{fileName} {
+      allow read: if isAuthenticated() && isOwner(userId);
+      allow create: if isAuthenticated() 
+                   && isOwner(userId)
+                   && isValidFileType()
+                   && isValidFileSize();
+      allow delete: if isAuthenticated() && isOwner(userId);
+      
+      // Auto-delete after 24 hours
+      match /{allPaths=**} {
+        allow read: if isAuthenticated() && isOwner(userId);
+        allow write: if false; // Only allow writes through the main temp rules
+      }
+    }
+
+    // System files (admin only)
+    match /system/{fileName} {
+      allow read: if true; // Public read access
+      allow write: if isAuthenticated() && isAdmin();
+    }
+  }
+}
