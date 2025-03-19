@@ -1,0 +1,7 @@
+{
+  "hooks": {
+    "pre-commit": "cd frontend && npx lint-staged",
+    "pre-push": "cd frontend && npm run test:ci",
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+  }
+}
